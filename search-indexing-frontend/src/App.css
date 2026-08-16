@@ -1,0 +1,78 @@
+@import url('https://fonts.googleapis.com/css2?family=PT+Serif:ital,wght@0,400;0,700;1,400&family=PT+Sans:wght@400;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import './styles/theme.css';
+
+/* App Layout */
+#root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* Main Content */
+main {
+  flex: 1;
+  max-width: 1180px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 28px;
+}
+
+/* Section Spacing */
+.section {
+  padding: 38px 0;
+}
+
+.section-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 22px;
+}
+
+.section-head h2 {
+  margin: 0;
+}
+
+.section-head .meta {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.section-head .meta strong {
+  color: var(--ink);
+}
+
+/* Eyebrow Text */
+.eyebrow {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--thread-teal);
+  margin: 0 0 10px;
+}
+
+/* Grid Classes */
+.results-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 18px;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  main {
+    padding: 0 16px;
+  }
+
+  .section {
+    padding: 24px 0;
+  }
+
+  .grid-auto {
+    grid-template-columns: 1fr;
+  }
+}
