@@ -10,5 +10,34 @@ services:
       - pgdata:/var/lib/postgresql/data
     ports:
       - "5434:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U emc -d searchindex"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build: .
+    restart: always
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/searchindex
+      SPRING_DATASOURCE_USERNAME: emc
+      SPRING_DATASOURCE_PASSWORD: emc
+      JWT_SECRET_KEY: BVSkdCitynkFzDMunkEINcGNGujPO7ORXnhkc/Lyg00=
+      SPRING_PROFILES_ACTIVE: dev
+    ports:
+      - "8080:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+
+  frontend:
+    build: ../search-indexing-frontend
+    restart: always
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+
 volumes:
   pgdata:
