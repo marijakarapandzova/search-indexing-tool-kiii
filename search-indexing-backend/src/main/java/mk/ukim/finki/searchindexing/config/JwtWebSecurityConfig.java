@@ -33,7 +33,7 @@ public class JwtWebSecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
-        corsConfiguration.setAllowedOrigins(List.of("http://localhost:3000"));
+        corsConfiguration.setAllowedOrigins(List.of("http://localhost:3000", "http://search-indexing.local"));
         corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
         corsConfiguration.setAllowedHeaders(List.of("*"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
@@ -44,8 +44,8 @@ public class JwtWebSecurityConfig {
     @Bean
     public RoleHierarchy roleHierarchy() {
         return RoleHierarchyImpl.withDefaultRolePrefix()
-            .role("ADMINISTRATOR").implies("USER")
-            .build();
+                .role("ADMINISTRATOR").implies("USER")
+                .build();
     }
 
     @Bean
@@ -58,42 +58,42 @@ public class JwtWebSecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(AbstractHttpConfigurer::disable)
-            .cors(corsCustomizer ->
-                corsCustomizer.configurationSource(corsConfigurationSource())
-            )
-            .headers(headers -> headers
-                .frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin)
-            )
-            .authorizeHttpRequests(authorizeHttpRequestsCustomizer ->
-                authorizeHttpRequestsCustomizer
-                    .requestMatchers(
-                        "/swagger-ui/**",
-                        "/v3/api-docs/**",
-                        "/api/user/register",
-                        "/api/user/login"
-                    )
-                    .permitAll()
-                    .requestMatchers(
-                        "/api/user/me"
-                    )
-                    .authenticated()
-                    // TODO(student): Tighten these rules if your solution introduces
-                    //  administrator-only operations (see the e-shop reference project
-                    //  for per-method, per-path examples).
-                    .requestMatchers(
-                        "/api/jobs/**",
-                        "/api/documents/**",
-                        "/api/donations/**"
-                    )
-                    .hasRole("USER")
-                    .anyRequest()
-                    .hasRole("ADMINISTRATOR")
-            )
-            .sessionManagement(sessionManagementConfigurer ->
-                sessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            )
-            .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+                .csrf(AbstractHttpConfigurer::disable)
+                .cors(corsCustomizer ->
+                        corsCustomizer.configurationSource(corsConfigurationSource())
+                )
+                .headers(headers -> headers
+                        .frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin)
+                )
+                .authorizeHttpRequests(authorizeHttpRequestsCustomizer ->
+                        authorizeHttpRequestsCustomizer
+                                .requestMatchers(
+                                        "/swagger-ui/**",
+                                        "/v3/api-docs/**",
+                                        "/api/user/register",
+                                        "/api/user/login"
+                                )
+                                .permitAll()
+                                .requestMatchers(
+                                        "/api/user/me"
+                                )
+                                .authenticated()
+                                // TODO(student): Tighten these rules if your solution introduces
+                                //  administrator-only operations (see the e-shop reference project
+                                //  for per-method, per-path examples).
+                                .requestMatchers(
+                                        "/api/jobs/**",
+                                        "/api/documents/**",
+                                        "/api/donations/**"
+                                )
+                                .hasRole("USER")
+                                .anyRequest()
+                                .hasRole("ADMINISTRATOR")
+                )
+                .sessionManagement(sessionManagementConfigurer ->
+                        sessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                )
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 }
